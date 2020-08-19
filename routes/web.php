@@ -21,5 +21,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/add-feed', 'FeedController@addFeed');
-Route::post('/add_new_feed', 'FeedController@addNewFeed');
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/add-feed', 'FeedController@addFeed');
+    Route::post('/add_new_feed', 'FeedController@addNewFeed');
+});

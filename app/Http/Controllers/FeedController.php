@@ -1,11 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Exceptions\InvalidRssFeed;
 use App\Services\RssFeedService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class FeedController
+class FeedController extends Controller
 {
     /**
      * @var RssFeedService
@@ -13,18 +14,12 @@ class FeedController
     private $rssFeedService;
 
     /**
-     * @var HomeController
-     */
-    private $homeController;
-
-    /**
      * FeedController constructor.
      * @param RssFeedService $rssFeedService
      */
-    public function __construct(RssFeedService $rssFeedService, HomeController $homeController)
+    public function __construct(RssFeedService $rssFeedService)
     {
         $this->rssFeedService = $rssFeedService;
-        $this->homeController = $homeController;
     }
 
     public function addFeed()
@@ -34,8 +29,18 @@ class FeedController
 
     public function addNewFeed(Request $request)
     {
-        $this->rssFeedService->addFeed(Auth::id(), $request->input('rss_url'));
+        $this->validate(
+            $request,
+            [
+                'rss_url' => 'required|unique:rss_feed,rss_url,NULL,id,user_id,' . Auth::id(),
+            ]
+        );
 
-        return $this->homeController->index();
+        try {
+            $this->rssFeedService->addFeed(Auth::id(), $request->input('rss_url'));
+        } catch (InvalidRssFeed $invalidRssFeed) {
+            return redirect()->back()->withErrors(['rss_url' => 'Invalid Feed URL']);
+        }
+        return redirect('/home');
     }
 }

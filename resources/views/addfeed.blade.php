@@ -15,8 +15,12 @@
                                 {{ session('status') }}
                             </div>
                         @endif
-
-                        <input type="url" size="50" name="rss_url" />
+                        @if($errors->any())
+                            <div class="alert alert-danger" role="alert">
+                                {!! implode('', $errors->all('<div>:message</div>')) !!}
+                            </div>
+                        @endif
+                        <input type="url" size="50" name="rss_url" class="@error('url') is-invalid @enderror" />
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Add Feed</button>

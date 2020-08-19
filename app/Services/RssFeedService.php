@@ -36,8 +36,8 @@ class RssFeedService
             $rssItems = new \Illuminate\Support\Collection();
 
             foreach ($rssXml->channel->item as $item) {
-                $rssItemTitle = (string)$item->title;
-                $rssItemDescription = (string)$item->description;
+                $rssItemTitle = html_entity_decode((string)$item->title, ENT_QUOTES);
+                $rssItemDescription = strip_tags(html_entity_decode((string)$item->description, ENT_QUOTES));
                 $rssItemLink = (string)$item->link;
 
                 $rssItems->add(new FeedItem($rssItemTitle, $rssItemDescription, $rssItemLink));
