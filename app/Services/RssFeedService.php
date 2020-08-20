@@ -29,7 +29,12 @@ class RssFeedService
         $rssData = new \Illuminate\Support\Collection();
 
         foreach ($urls as $url) {
-            $rssXml = simplexml_load_file($url->rss_url);
+            try {
+                $rssXml = simplexml_load_file($url->rss_url);
+            } catch (\Exception $ex) {
+                throw new InvalidRssFeed();
+            }
+
             $title = (string)$rssXml->channel->title;
             $image = (string)$rssXml->channel->image->url;
 
@@ -58,7 +63,11 @@ class RssFeedService
     public function addFeed(int $userId, string $url)
     {
         libxml_use_internal_errors(true);
-        $rssXml = simplexml_load_file($url);
+        try {
+            $rssXml = simplexml_load_file($url);
+        } catch (\Exception $ex) {
+            throw new InvalidRssFeed();
+        }
 
         if ($rssXml === false) {
             libxml_clear_errors();

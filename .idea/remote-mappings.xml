@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteMappingsManager">
+    <list>
+      <list>
+        <remote-mappings server-id="php@c56e84c3-73f9-4040-9ce3-0d3fd3da7f1c">
+          <settings>
+            <list>
+              <mapping local-root="/hone/nick/PhpstormProjects/RssFeeds" remote-root="/var/www" />
+            </list>
+          </settings>
+        </remote-mappings>
+      </list>
+    </list>
+  </component>
+</project>

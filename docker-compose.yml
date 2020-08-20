@@ -13,6 +13,8 @@ services:
     links:
       - app
   app:
+    depends_on:
+      - database
     build:
       context: ./
       dockerfile: deploy/app.docker
@@ -31,10 +33,19 @@ services:
       - "MYSQL_ROOT_PASSWORD=myrootpass"
       - "MYSQL_DATABASE=rssfeeds"
     ports:
-      - "33061:3306"
+      - "3306:3306"
+    volumes:
+      - mysqltest:/var/lib/mysql
+      - ./logs:/var/log/mysql
+      - ./conf.d:/etc/mysql/conf.d
+
   composer:
     image: composer
     working_dir: /var/www
     volumes:
       - ./:/var/www
     command: update
+
+volumes:
+  mysqltest:
+    driver: "local"

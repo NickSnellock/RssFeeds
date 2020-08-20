@@ -45,6 +45,21 @@ class RssFeedServiceTest extends TestCase
         $rssFeedService->addFeed(1, 'x');
     }
 
+    public function testAddFeedUrlNotFound()
+    {
+        $rssFeedRepository = Mockery::mock(RssFeedRepositoryInterface::class);
+        $rssFeedRepository->shouldReceive('storeFeed');
+
+        app()->instance(RssFeedRepositoryInterface::class, $rssFeedRepository);
+
+        /** @var RssFeedService $rssFeedService */
+        $rssFeedService = app()->get(RssFeedService::class);
+
+        $this->expectException(InvalidRssFeed::class);
+
+        $rssFeedService->addFeed(1, 'http://not.found');
+    }
+
     public function testGetFeedsForUserFeedsFound()
     {
         $rssFeeds = new Collection([new RssFeed(['user_id' => 1, 'rss_url' => 'http://feeds.bbci.co.uk/news/rss.xml'])]);
