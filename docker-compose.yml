@@ -4,12 +4,10 @@ services:
     build:
       context: ./
       dockerfile: deploy/web.docker
-    extra_hosts:
-      - "host.docker.internal:172.20.0.1"
     volumes:
       - ./:/var/www
     ports:
-      - "8080:80"
+      - "1080:80"
     links:
       - app
   app:
@@ -18,8 +16,6 @@ services:
     build:
       context: ./
       dockerfile: deploy/app.docker
-    extra_hosts:
-      - "host.docker.internal:172.20.0.1"
     volumes:
       - ./:/var/www
     links:
@@ -27,6 +23,7 @@ services:
     environment:
       - "DB_PORT=3306"
       - "DB_HOST=database"
+      - "PHP_IDE_CONFIG=serverName=rssfeeds.local"
   database:
     image: mysql
     environment:
